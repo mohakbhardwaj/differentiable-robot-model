@@ -1,4 +1,5 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
+import os
 from typing import List, Tuple, Dict, Optional, Any
 
 import torch
@@ -17,7 +18,7 @@ class DifferentiableRobotModel(torch.nn.Module):
     """
 
     def __init__(
-        self, rel_urdf_path: str, learnable_rigid_body_config, name=""
+        self, urdf_path: str, learnable_rigid_body_config, name=""
     ):
 
         super().__init__()
@@ -25,9 +26,9 @@ class DifferentiableRobotModel(torch.nn.Module):
         self.name = name
 
         self._device = "cpu"
-
+        
         self._urdf_model = URDFRobotModel(
-            rel_urdf_path=rel_urdf_path, device=self._device
+            urdf_path=urdf_path, device=self._device
         )
         self._bodies = torch.nn.ModuleList()
         self._n_dofs = 0
@@ -147,7 +148,6 @@ class DifferentiableRobotModel(torch.nn.Module):
         assert q.ndim == 2
         qd = torch.zeros_like(q)
         self.update_kinematic_state(q, qd)
-
         pose = self._bodies[self._name_to_idx_map[link_name]].pose
         pos = pose.translation()
         rot = pose.get_quaternion()

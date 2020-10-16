@@ -11,8 +11,8 @@ robot_description_folder = robot_data.__path__[0]
 
 
 class URDFRobotModel(object):
-    def __init__(self, rel_urdf_path, device='cpu'):
-        urdf_path = os.path.join(robot_description_folder, rel_urdf_path)
+    def __init__(self, urdf_path, device='cpu'):
+        # urdf_path = os.path.join(robot_description_folder, rel_urdf_path)
         self.robot = URDF.from_xml_file(urdf_path)
         self._device = device
 
