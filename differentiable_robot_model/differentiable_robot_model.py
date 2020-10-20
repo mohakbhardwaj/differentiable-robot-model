@@ -18,11 +18,10 @@ class DifferentiableRobotModel(torch.nn.Module):
     """
 
     def __init__(
-        self, urdf_path: str, learnable_rigid_body_config, name=""
+        self, urdf_path: str, learnable_rigid_body_config=None, name=""
     ):
 
         super().__init__()
-
         self.name = name
 
         self._device = "cpu"
@@ -43,7 +42,7 @@ class DifferentiableRobotModel(torch.nn.Module):
 
             rigid_body_params = self._urdf_model.get_body_parameters_from_urdf(i, link)
 
-            if link.name in learnable_rigid_body_config.learnable_links:
+            if (learnable_rigid_body_config is not None) and (link.name in learnable_rigid_body_config.learnable_links):
                 body = LearnableRigidBody(
                     learnable_rigid_body_config=learnable_rigid_body_config,
                     gt_rigid_body_params=rigid_body_params,
